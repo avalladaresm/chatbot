@@ -2,21 +2,21 @@ import 'antd/dist/antd.css';
 import 'react-chat-elements/dist/main.css';
 import React from 'react'
 import { Layout, Menu } from 'antd';
-import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import {  UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 
-import {TrelloChannel} from './TrelloChannel'
-import {MeetingsChannel} from './MeetingsChannel'
+import { TrelloChannel } from './TrelloChannel'
+import { MeetingsChannel } from './MeetingsChannel'
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
+	BrowserRouter as Router,
+	Switch,
+	Route,
+	Link
 } from 'react-router-dom';
 const { Header, Content, Sider } = Layout;
 function BasicLayout(props) {
-  return (
+	return (
 		<Router>
-			<Layout style={{height:'100vh'}}>
+			<Layout style={{ height: '100vh' }}>
 				<Sider
 					breakpoint='lg'
 					collapsedWidth='0'
@@ -52,7 +52,7 @@ function BasicLayout(props) {
 				</Layout>
 			</Layout>
 		</Router>
-  );
+	);
 }
 
 export default BasicLayout;
