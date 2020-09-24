@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using chatbotapi.Models;
+using System.Net.Http;
 
 namespace chatbotapi.Controllers
 {
@@ -76,10 +77,16 @@ namespace chatbotapi.Controllers
         [HttpPost]
         public async Task<ActionResult<ChatItem>> PostChatItem(ChatItem chatItem)
         {
-            _context.ChatItems.Add(chatItem);
-            await _context.SaveChangesAsync();
+            var client = new HttpClient();
+            var appId = Program.Configuration["Luis:appId"];
+            var predictionKey = Program.Configuration["Luis:predictionKey"];
 
-    				return CreatedAtAction(nameof(GetChatItem), new { id = chatItem.Id }, chatItem);
+            var predictionEndpoint = $"https://westus.api.cognitive.microsoft.com/luis/prediction/v3.0/apps/{appId}/slots/production/predict?subscription-key={predictionKey}&verbose=true&show-all-intents=true&log=true&query={chatItem.Utterance}";
+            HttpResponseMessage response = await client.GetAsync(predictionEndpoint);
+
+            string strResponseContent = await response.Content.ReadAsStringAsync();
+
+            return Ok(new { result = strResponseContent });
         }
 
         // DELETE: api/ChatItems/5
