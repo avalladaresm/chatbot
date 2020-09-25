@@ -38,8 +38,8 @@ export const MeetingsChannel = () => {
     let m = {position:'right', type:'text', text:message, date:new Date()}
     setDataSoure([...dataSource, m]);
     setMessage('')
-  }
-
+	}
+	
   return (
     <>
       <MessageList

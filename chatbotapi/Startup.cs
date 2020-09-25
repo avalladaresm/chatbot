@@ -12,6 +12,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using chatbotapi.Models;
+using Microsoft.IdentityModel.Tokens;  
+using System.Text;  
+
 namespace chatbotapi
 {
     public class Startup
@@ -28,6 +31,29 @@ namespace chatbotapi
         {
 						services.AddDbContext<ChatBotContext>(opt =>
                opt.UseInMemoryDatabase("UtterancesList"));
+						services.AddDbContext<ChatBotContext>(opt =>
+               opt.UseInMemoryDatabase("Users"));
+						services.AddIdentity<ApplicationUser, IdentityRole>()  
+                .AddEntityFrameworkStores<ApplicationDbContext>()  
+                .AddDefaultTokenProviders();  
+						services.AddAuthentication(options =>  
+            {  
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;  
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;  
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;  
+            }).AddJwtBearer(options =>  
+            {  
+                options.SaveToken = true;  
+                options.RequireHttpsMetadata = false;  
+                options.TokenValidationParameters = new TokenValidationParameters()  
+                {  
+                    ValidateIssuer = true,  
+                    ValidateAudience = true,  
+                    ValidAudience = Configuration["JWT:ValidAudience"],  
+                    ValidIssuer = Configuration["JWT:ValidIssuer"],  
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))  
+                };  
+            });  
             services.AddControllers();
         }
 

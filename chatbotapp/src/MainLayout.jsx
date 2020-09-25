@@ -1,7 +1,7 @@
 import 'antd/dist/antd.css';
 import 'react-chat-elements/dist/main.css';
-import React from 'react'
-import { Layout, Menu } from 'antd';
+import React, { useEffect, useState } from 'react'
+import { Layout, Menu, Result } from 'antd';
 import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 
 import {TrelloChannel} from './TrelloChannel'
@@ -12,10 +12,20 @@ import {
   Route,
   Link
 } from 'react-router-dom';
+import Cookie from 'js-cookie'
 const { Header, Content, Sider } = Layout;
+
 function BasicLayout(props) {
+	const [authorized, setAuthorized] = useState(false)
+	useEffect(() => {
+		var referrer = document.referrer;
+		referrer && referrer.length > 0 ? setAuthorized(true) : setAuthorized(false)
+		console.log(referrer)
+	}, [])
+
   return (
-		<Router>
+		<>
+		{authorized ? <Router>
 			<Layout style={{height:'100vh'}}>
 				<Sider
 					breakpoint='lg'
@@ -51,7 +61,11 @@ function BasicLayout(props) {
 					</Content>
 				</Layout>
 			</Layout>
-		</Router>
+		</Router> 
+		: 
+		<Result title='403 FORBIDDEN' />}
+		</>
+		
   );
 }
 
