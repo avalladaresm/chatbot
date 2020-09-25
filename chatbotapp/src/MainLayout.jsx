@@ -47,7 +47,7 @@ function BasicLayout(props) {
 	}
 
 	useEffect(() => {
-		axios.get('http://localhost:8082/api/TrelloBoard/').then((res) => {
+		axios.get('http://localhost:8081/api/TrelloBoard/').then((res) => {
 			console.log(res)
 			setBoards(res.data)
 		})

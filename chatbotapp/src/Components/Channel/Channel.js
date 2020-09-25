@@ -8,6 +8,7 @@ export const Channel = (props) => {
 		const [activeBoard, setActiveBoard] = useState();
 		const [defaultList, setDefaultList] = useState('To Do');
 		const [lists, setLists] = useState()
+		const [cards, setCards] = useState()
 
     const createNewMessage = (message) => {
         let msg = { position: 'right', type: 'text', text: message, date: new Date() }
@@ -23,7 +24,7 @@ export const Channel = (props) => {
 
     const createTrelloBoard=(Nombre)=>{
 			const options={Name:Nombre};
-      axios.post('http://localhost:8082/api/TrelloBoard', options).then((res) => {
+      axios.post('http://localhost:8081/api/TrelloBoard', options).then((res) => {
 				if(res.data)
 					createNewBotMessage(`Tablero "${res.data.name}" creado!`);
 					console.log(res.data.id)
@@ -35,8 +36,15 @@ export const Channel = (props) => {
 		}
 		
 		const getTrelloLists = (boardId) => {
-			axios.get(`http://localhost:8082/api/TrelloBoard/${boardId}/Lists`).then((res) => {
+			axios.get(`http://localhost:8081/api/TrelloBoard/${boardId}/Lists`).then((res) => {
+				console.log("data",res.data)
 				setLists(res.data)
+			})
+		}
+
+		const getTrelloCards = (boardId) => {
+			axios.get(`http://localhost:8081/api/TrelloBoard/${boardId}/Cards`).then((res) => {
+				setCards(res.data)
 			})
 		}
 		
@@ -44,16 +52,36 @@ export const Channel = (props) => {
 			const targetList = lists.filter(x => {
 				return x && x.name === defaultList ? x.id : ''
 			})
-			console.log(targetList[0].id)
 			const options={Name:Nombre, IdList: targetList[0].id};
-			
-      axios.post('http://localhost:8082/api/TrelloCard', options).then((res) => {
+			axios.post('http://localhost:8081/api/TrelloCard', options).then((res) => {
 				if(res.data){
-					console.log(res)
 					createNewBotMessage(`Tarjeta "${res.data.name}" creada en lista ${defaultList}!`);
+					getTrelloCards(activeBoard)
 				}
 			}).catch((e) => {
 				createNewBotMessage(`Ha ocurrido un error creando la tarjeta :(`);
+			});
+		}
+		
+		const moveTrelloCard=(Nombre, NombreColumna)=>{
+			const targetList = lists.filter(x => {
+				return x && x.name === NombreColumna ? x.id : ''
+			})
+
+			const targetCard = cards.filter(x => {
+				return x && x.name === Nombre ? x.id : ''
+			})
+			if(!targetList || !targetList.length || !targetCard && !targetCard.length ) return createNewBotMessage(`La columna o la tarjeta no existe :(`);
+			const column = targetList[0];
+			const options={IdList: column.id};
+			const card = targetCard[0];
+			
+			axios.put(`http://localhost:8081/api/TrelloCard/${card.id}`, options).then((res) => {
+				if(res.data){
+					createNewBotMessage(`Tarjeta "${res.data.name}" movida a la columna ${column.name}!`);
+				}
+			}).catch((e) => {
+				createNewBotMessage(`Ha ocurrido un error moviendo la tarjeta :(`);
 			});
     }
 
@@ -65,10 +93,13 @@ export const Channel = (props) => {
             const prediction = data.prediction;
 						const {topIntent, entities}=prediction;
 						console.log('nom', prediction)
+			// console.log(topIntent)
             switch(topIntent){
-								case "Create Trello":createTrelloBoard(entities.Nombre.toString());break;
-								case "Create Card":createTrelloCard(entities.Nombre.toString());break;
-                default: createNewBotMessage("No comprendi, que ocupas que haga?");
+							case "Create Trello":return createTrelloBoard(entities.Nombre.toString());	
+							case "Create Card":return createTrelloCard(entities.Nombre.toString()); 
+							case "Move Card":return moveTrelloCard(entities.Nombre.toString(), entities.NombreColumna.toString());
+							
+							default: createNewBotMessage("No comprendi, que ocupas que haga?");
             }
         })
 		}

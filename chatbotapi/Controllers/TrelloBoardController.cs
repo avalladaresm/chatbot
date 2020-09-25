@@ -72,11 +72,11 @@ namespace chatbotapi.Controllers
         // PUT: api/TrelloBoard/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
+/*         [HttpPut("{id}")]
         public async Task<IActionResult> PutTrelloBoard(string id, TrelloBoard trelloBoard)
         {
             return NoContent();
-        }
+        } */
 
         // POST: api/TrelloBoard
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
@@ -92,7 +92,7 @@ namespace chatbotapi.Controllers
 								{
 									{"name", trelloBoard.Name}
 								};
-							 	var content = new FormUrlEncodedContent(value);
+							var content = new FormUrlEncodedContent(value);
 
 								using (var response = await httpClient.PostAsync($"https://api.trello.com/1/boards/?key=497ef583ac14260990a0da4666ba3ca1&token=c3bb539a50ffa542ed936f62debd6e76c777ffb6ea5a101a76c7fb35b050861d", content))
 								{

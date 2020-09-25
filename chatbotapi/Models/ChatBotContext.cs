@@ -11,8 +11,6 @@ namespace chatbotapi.Models
 
         public DbSet<ChatItem> ChatItems { get; set; }
 
-        public DbSet<Trello> Trello { get; set; }
-
         public DbSet<Meeting> Meeting { get; set; }
 
         public DbSet<TrelloCard> TrelloCard { get; set; }

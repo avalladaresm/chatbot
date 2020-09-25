@@ -26,7 +26,7 @@ namespace chatbotapi.Controllers
         [HttpGet]
         public async Task<ActionResult<IList<Meeting>>> GetMeeting()
         {
-        
+					return Ok("Ok");
         }
 
         // GET: api/Meeting/5

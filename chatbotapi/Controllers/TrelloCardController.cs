@@ -51,8 +51,23 @@ namespace chatbotapi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTrelloCard(string id, TrelloCard trelloCard)
         {
+					Console.WriteLine(id);
+						List<TrelloBoard> list = new List<TrelloBoard>();
+						string apiResponse;
+						using (var httpClient = new HttpClient())
+						{
+								var value = new Dictionary<string, string>
+								{
+									{"idList", trelloCard.IdList},
+								};
+							 	var content = new FormUrlEncodedContent(value);
 
-            return NoContent();
+								using (var response = await httpClient.PutAsync($"https://api.trello.com/1/cards/{id}?key=497ef583ac14260990a0da4666ba3ca1&token=c3bb539a50ffa542ed936f62debd6e76c777ffb6ea5a101a76c7fb35b050861d", content))
+								{
+										apiResponse = await response.Content.ReadAsStringAsync();									
+								}
+						}
+						return Ok(apiResponse);
         }
 
         // POST: api/TrelloCard
