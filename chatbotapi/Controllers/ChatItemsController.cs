@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Cors;
 namespace chatbotapi.Controllers
 {
     [Route("api/[controller]")]
-    [EnableCors()]
     [ApiController]
     public class ChatItemsController : ControllerBase
     {

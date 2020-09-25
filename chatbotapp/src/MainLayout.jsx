@@ -10,10 +10,12 @@ import {
 	Route,
 	Link
 } from 'react-router-dom';
+import axios from 'axios'
+
 const { Header, Content, Sider } = Layout;
 function BasicLayout(props) {
-	const [channels, setChannel] = useState([
-		{
+	const [boards, setBoards] = useState([])
+	const [channels, setChannel] = useState([{
 		id:0,
 		name: 'General',
 		dataSource: [{
@@ -22,27 +24,35 @@ function BasicLayout(props) {
 			text: 'Bienvendio al canal General.',
 			date: new Date()
 		}]
-	},{
-		id:1,
-		name: 'Meetings',
-		dataSource: [{
-			position: 'left',
-			type: 'text',
-			text: 'Bienvendio al canal Meeting.',
-			date: new Date()
-		}]
-	},
-]);
+		},{
+			id:1,
+			name: 'Meetings',
+			dataSource: [{
+				position: 'left',
+				type: 'text',
+				text: 'Bienvendio al canal Meeting.',
+				date: new Date()
+			}]
+		},
+	]);
 
-useEffect(() => {  }, [channels])
+	useEffect(() => {  }, [channels])
 
-const addMessage=(id, msg)=>{
-	return setChannel(channels.map((channel)=>{
-		if(channel.id===id)
-			channel.dataSource.push(msg);
-		return channel
-	}))
-}
+	const addMessage=(id, msg)=>{
+		return setChannel(channels.map((channel)=>{
+			if(channel.id===id)
+				channel.dataSource.push(msg);
+			return channel
+		}))
+	}
+
+	useEffect(() => {
+		axios.get('http://localhost:8082/api/TrelloBoard/').then((res) => {
+			console.log(res)
+			setBoards(res.data)
+		})
+	}, [])
+
 	return (
 		<Router>
 			<Layout style={{ height: '100vh' }}>
@@ -68,7 +78,7 @@ const addMessage=(id, msg)=>{
 							{
 								channels.map((channel)=>(
 								<Route key={channel.id} path={`/${channel.name}`}>
-								<Channel  addMessage={addMessage} dataSource={channel.dataSource} id={channel.id}/>
+								<Channel addMessage={addMessage} dataSource={channel.dataSource} id={channel.id} boards={boards}/>
 							</Route>))
 							}
 						</Switch>
