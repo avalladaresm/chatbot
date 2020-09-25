@@ -29,6 +29,14 @@ namespace chatbotapi
 						services.AddDbContext<ChatBotContext>(opt =>
                opt.UseInMemoryDatabase("UtterancesList"));
             services.AddControllers();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "origins",
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("*").WithMethods("PUT","Post", "DELETE", "GET");
+                                  });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +46,8 @@ namespace chatbotapi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors();
 
             app.UseHttpsRedirection();
 

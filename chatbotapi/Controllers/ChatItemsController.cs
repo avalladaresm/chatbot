@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using chatbotapi.Models;
 using System.Net.Http;
+using Microsoft.AspNetCore.Cors;
 
 namespace chatbotapi.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors()]
     [ApiController]
     public class ChatItemsController : ControllerBase
     {
@@ -86,7 +88,7 @@ namespace chatbotapi.Controllers
 
             string strResponseContent = await response.Content.ReadAsStringAsync();
 
-            return Ok(new { result = strResponseContent });
+            return Ok(strResponseContent);
         }
 
         // DELETE: api/ChatItems/5
