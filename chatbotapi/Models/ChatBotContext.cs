@@ -18,5 +18,7 @@ namespace chatbotapi.Models
         public DbSet<TrelloBoard> TrelloBoard { get; set; }
 
         public DbSet<TrelloList> TrelloList { get; set; }
+
+        public DbSet<User> User { get; set; }
     }
 }

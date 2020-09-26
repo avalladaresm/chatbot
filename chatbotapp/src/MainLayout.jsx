@@ -59,7 +59,6 @@ function BasicLayout(props) {
 				<Sider
 					breakpoint='lg'
 					collapsedWidth='0'
-					
 				>
 					<div className='logo' />
 					<Menu theme='dark' mode='inline' defaultSelectedKeys={['4']}>
@@ -73,11 +72,11 @@ function BasicLayout(props) {
 				</Sider>
 				<Layout>
 					<Header className='site-layout-sub-header-background' style={{ padding: 0 }} />
-					<Content style={{ margin: '24px 16px 0' }}>
+					<Content style={{ margin: '24px 16px 0' }}> 
 						<Switch>
 							{
 								channels.map((channel)=>(
-								<Route key={channel.id} path={`/${channel.name}`}>
+									<Route key={channel.id} path={`/${channel.name}`}>
 								<Channel addMessage={addMessage} dataSource={channel.dataSource} id={channel.id} boards={boards}/>
 							</Route>))
 							}

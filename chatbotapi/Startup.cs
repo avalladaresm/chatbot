@@ -28,6 +28,7 @@ namespace chatbotapi
         {
 						services.AddDbContext<ChatBotContext>(opt =>
                opt.UseInMemoryDatabase("UtterancesList"));
+						services.AddDbContext<ChatBotContext>((s, p) => p.UseSqlite("Data Source=Data.db"));
             services.AddControllers();
         }
 
